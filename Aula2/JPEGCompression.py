@@ -63,8 +63,8 @@ def blockProcessing(imgChannelBlock,luminanceOrChrominance, compFactor):
     result = cv.dct(result, None, flags=cv.DCT_INVERSE)
     # h) Add DC component, clip to 0..255 and convert to byte
     result = np.clip(result + 128, 0, 255)
-    result = np.byte(result)
+    result = np.uint8(result)
 
-    return result
+    return np.uint8(result)
 
 
