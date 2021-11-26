@@ -37,18 +37,23 @@ def getFaceBox(frame, conf_threshold=0.7):
 
     return frameOpencvDnn, bboxes
 
+
 def GetHOGPedestrians_Detection(frame):
-    hog = cv.HOGDescriptor()
-    hog.setSVMDetector(cv.HOGDescriptor.getDefaultPeopleDetector())
 
-
-    pedestrians = hog.detectMultiScale(frame)
 
     # Cycle through list of pedestrians found and draw rectangles
-    for (x,y,w,h) in pedestrians[0]:
-        center = (x + w//2, y + h//2)
-        pedestrian = cv.rectangle(frame, (x,y), (x+w,y+h), (0, 0, 255), 4)
+    hog = cv.HOGDescriptor()
+    hog.setSVMDetector(cv.HOGDescriptor.getDefaultPeopleDetector())
+    pedestrians = hog.detectMultiScale(frame)
+    if len(pedestrians[0]) > 0:
+        for (x, y, w, h) in pedestrians[0]:
+            center = (x + w // 2, y + h // 2)
+            pedestrian = cv.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 4)
         return pedestrian
+
+    else:
+        return frame
+
 
 def main():
     """"
@@ -119,43 +124,43 @@ def main():
 
 
 """
-    #ex2
+    # ex2
 
     filename3 = "faces (1).jpg"
     img_faces = cv.imread(filename3)
 
     img_facesGray = cv.cvtColor(img_faces, cv.COLOR_BGR2GRAY)
-    w= img_facesGray.shape[0]
+    w = img_facesGray.shape[0]
     h = img_facesGray.shape[1]
     # Get pre-trained classifier
     haar = cv.CascadeClassifier("haarcascade_frontalface_alt2.xml")
     # Apply Viola-Jones
-    faces = haar.detectMultiScale(img_facesGray, scaleFactor = 1.4, minSize = (24, 24), maxSize = (img_facesGray.shape[1] // 2, img_facesGray.shape[0] // 2))
+    faces = haar.detectMultiScale(img_facesGray, scaleFactor=1.4, minSize=(24, 24),
+                                  maxSize=(img_facesGray.shape[1] // 2, img_facesGray.shape[0] // 2))
     # Cycle through faces list
-    for(x, y, w, h) in faces:
-        img_faces = cv.rectangle(img_faces, (x,y), (x+w,y+h), (0,0,255), 2)
+    for (x, y, w, h) in faces:
+        img_faces = cv.rectangle(img_faces, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
     iF.showSideBySideImages(img_faces, img_faces, "Viola-Jones: resultado vs. resultado com BGR1=False", BGR1=False)
 
-    #ex3
+    # ex3
 
     filename4 = "pedestrian (1).jpg"
-    img_pedestrians = cv.imread( filename4)
-    img_pedestrians_original = cv.imread( filename4)
-
+    img_pedestrians = cv.imread(filename4)
+    img_pedestrians_original = cv.imread(filename4)
 
     img_pedestrians = GetHOGPedestrians_Detection(img_pedestrians)
     iF.showSideBySideImages(img_pedestrians_original, img_pedestrians, "HOG: original vs. pedestrians found")
 
-    #ex4
+    # ex4
 
     filename5 = "faces (7).jpg"
     img_faces2 = cv.imread(filename5)
-    frame_face , box = getFaceBox(img_faces2)
+    frame_face, box = getFaceBox(img_faces2)
 
     iF.showSideBySideImages(frame_face, img_faces2, "DNN", BGR1=False)
 
-     #ex5
+    # ex5
 
     filename6 = "pedestrian Video.mp4"
     vidCap = cv.VideoCapture(filename6)
@@ -175,7 +180,6 @@ def main():
         if (cv.waitKey(20) >= 0):
             break
 
+
 if __name__ == "__main__":
     main()
-
-
