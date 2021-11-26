@@ -37,6 +37,19 @@ def getFaceBox(frame, conf_threshold=0.7):
 
     return frameOpencvDnn, bboxes
 
+def GetHOGPedestrians_Detection(frame):
+    hog = cv.HOGDescriptor()
+    hog.setSVMDetector(cv.HOGDescriptor.getDefaultPeopleDetector())
+
+
+    pedestrians = hog.detectMultiScale(frame)
+
+    # Cycle through list of pedestrians found and draw rectangles
+    for (x,y,w,h) in pedestrians[0]:
+        center = (x + w//2, y + h//2)
+        pedestrian = cv.rectangle(frame, (x,y), (x+w,y+h), (0, 0, 255), 4)
+        return pedestrian
+
 def main():
     """"
     faces = []
@@ -105,7 +118,7 @@ def main():
                iF.showSideBySideImages(img_gray, img_grayCP, "Ex.1")
 
 
-    """
+"""
     #ex2
 
     filename3 = "faces (1).jpg"
@@ -130,21 +143,37 @@ def main():
     img_pedestrians = cv.imread( filename4)
     img_pedestrians_original = cv.imread( filename4)
 
-    hog = cv.HOGDescriptor()
-    hog.setSVMDetector(cv.HOGDescriptor.getDefaultPeopleDetector())
 
-
-    pedestrians = hog.detectMultiScale(img_pedestrians)
-
-    # Cycle through list of pedestrians found and draw rectangles
-    for (x,y,w,h) in pedestrians[0]:
-        center = (x + w//2, y + h//2)
-        img_pedestrians = cv.rectangle(img_pedestrians, (x,y), (x+w,y+h), (0, 0, 255), 4)
-
+    img_pedestrians = GetHOGPedestrians_Detection(img_pedestrians)
     iF.showSideBySideImages(img_pedestrians_original, img_pedestrians, "HOG: original vs. pedestrians found")
 
+    #ex4
 
+    filename5 = "faces (7).jpg"
+    img_faces2 = cv.imread(filename5)
+    frame_face , box = getFaceBox(img_faces2)
 
+    iF.showSideBySideImages(frame_face, img_faces2, "DNN", BGR1=False)
+
+     #ex5
+
+    filename6 = "pedestrian Video.mp4"
+    vidCap = cv.VideoCapture(filename6)
+
+    if (not vidCap.isOpened()):
+        print("Video File Not Found")
+        exit(-1)
+
+    while (True):
+        ret, vidFrame = vidCap.read()
+        if (not ret):
+            break
+
+        imgOut = GetHOGPedestrians_Detection(vidFrame)
+
+        cv.imshow("Video", imgOut)
+        if (cv.waitKey(20) >= 0):
+            break
 
 if __name__ == "__main__":
     main()
