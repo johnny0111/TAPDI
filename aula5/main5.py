@@ -18,11 +18,12 @@ imgPhaseLog = cv2.log(imgPhase)
 imgMagLogShift = np.fft.fftshift(imgMagLog)
 imgPhaseLogShift = np.fft.fftshift(imgPhaseLog)
 IF.showSideBySideImages(imgMagLogShift, imgPhaseLogShift)
+IF.showSideBySideImages(np.fft.fftshift(imgMag),np.fft.fftshift(imgPhase))
 cv.waitKey()
 
 #Ex2
-filename1 = "aula5 (1).bmp"
-filename2 = "aula5 (2).bmp"
+#filename1 = "aula5 (1).bmp"
+#filename2 = "aula5 (2).bmp"
 
 img1 = cv.imread(filename1)
 img2 = cv.imread(filename2)
@@ -62,4 +63,4 @@ resultHpG = cv2.multiply(img1MAG, np.fft.fftshift(HpGaussianFilter))
 img1InvLpG = FFT.GetFFT_Inverse_Mag_Phase(resultLpG,img1PHASE)
 img1InvHpG = FFT.GetFFT_Inverse_Mag_Phase(resultHpG,img1PHASE)
 
-IF.showSideBySideImages(img1InvLpG, img1InvHpG)
+IF.showSideBySideImages(img1, img1InvHpG)
