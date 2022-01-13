@@ -6,7 +6,7 @@ def main():
     img = cv.imread("faces.jpg")
     imgb = cv.imread("faces.jpg")
     plaform, device, ctx, commQ, prog = sobel.sobelSetup()
-    img2 = sobel.sobelGPU(img, 150, 50,plaform,device,ctx,commQ,prog)
+    img2 = sobel.sobelGPU(img, 50, 10,plaform,device,ctx,commQ,prog)
     iF.showSideBySideImages(img,img2,"IMG", False, False)
 
     plaform, device, ctx, commQ, prog = b.Setup()
