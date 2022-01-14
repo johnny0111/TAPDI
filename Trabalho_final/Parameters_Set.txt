@@ -1,0 +1,4 @@
+Threshold(t1): 10
+Threshold(t2): 100
+RadiusMax: 100
+RadiusMin: 10
